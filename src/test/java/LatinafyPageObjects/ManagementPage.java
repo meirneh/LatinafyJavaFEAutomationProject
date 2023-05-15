@@ -75,6 +75,14 @@ public class ManagementPage extends BasePage {
     private List<WebElement> prod_names;
     @FindBy(css = "#breadcrumbs_2070  a")
     private WebElement homeBtn;
+    //Pagination
+    @FindBy(css = ".ty-pagination__bottom .et-icon-pag-left")
+    private WebElement paginationLeftBtn;
+    @FindBy(css = ".ty-pagination__bottom .et-icon-pag-right")
+    private WebElement paginationRightBtn;
+    @FindBy(css = ".ty-pagination__bottom  a")
+    private List<WebElement>pages;
+
 
     public ManagementPage(WebDriver driver) {
         super(driver);
@@ -153,6 +161,7 @@ public class ManagementPage extends BasePage {
     }
 
     public void addToCartFromProduct(String product) {
+        implicitWait(3000);
         for (WebElement el : containerProduct) {
             WebElement title = el.findElement(By.cssSelector(":nth-child(1) .et-grid-product-name"));
             WebElement ProdaddToCartBTn = el.findElement(By.cssSelector(".et-add-to-cart.et-in-stock"));
@@ -219,7 +228,7 @@ public class ManagementPage extends BasePage {
 
     public void removeItemfromCartList() {
         showaddToCartList();
-        implicitWait(1000);
+        implicitWait(2000);
         hoverOverElement(nameItemCart);
         hoverOverElement(removeItemsCartBtn);
         click(removeItemsCartBtn);
@@ -236,10 +245,6 @@ public class ManagementPage extends BasePage {
         hoverOverElement(homeBtn);
         explicitWaitClickable(homeBtn);
         click(homeBtn);
-    }
-
-    public void goDown() {
-
     }
 
     public void printItemsInCart() {
@@ -276,19 +281,30 @@ public class ManagementPage extends BasePage {
      }
 
  }
+  public void goToNextPage(){
+        explicitWaitClickable(paginationRightBtn);
+        click(paginationRightBtn);
+        implicitWait(2000);
+  }
 
-   /* public void removeSelectItemfromCartList(String title) {
-        showaddToCartList();
-        for (WebElement el : itemsInCartList) {
-            if (nameItemCart.getText().equalsIgnoreCase(title)) {
-                implicitWait(1000);
-                hoverOverElement(el);
-                hoverOverElement(removeItemsCartBtn);
-                click(removeItemsCartBtn);
+  public void goToPrevPage(){
+        explicitWaitClickable(paginationLeftBtn);
+        click(paginationLeftBtn);
+        implicitWait(2000);
+  }
+
+  public void goToPage(String pageNum){
+        for (WebElement el :pages){
+            if (el.getText().equals(pageNum)){
+                explicitWaitClickable(el);
+                click(el);
+                System.out.println("page:  " + el.getText());
+                break;
             }
-
         }
-    }*/
+
+  }
+
     //Validations
     public void list() {
         System.out.println(subcategories.size());
@@ -311,6 +327,7 @@ public class ManagementPage extends BasePage {
     }
 
     public String getCurrentPageURL() {
+        implicitWait(2000);
         return getUrl(driver);
     }
 
@@ -331,5 +348,7 @@ public class ManagementPage extends BasePage {
         }
         return Itemnames;
     }
+
+
 
 }
